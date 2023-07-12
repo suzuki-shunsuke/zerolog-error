@@ -6,11 +6,11 @@ type Field interface {
 	With(ev *zerolog.Event) *zerolog.Event
 }
 
-type String struct {
+type Str struct {
 	Key   string
 	Value string
 }
 
-func (field *String) With(ev *zerolog.Event) *zerolog.Event {
+func (field *Str) With(ev *zerolog.Event) *zerolog.Event {
 	return ev.Str(field.Key, field.Value)
 }
