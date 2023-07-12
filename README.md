@@ -54,7 +54,7 @@ e.g.
 ```go
 func updateUser() error {
 	// ...
-	return zerr.WithFields(errors.New("get a user"), &zerr.Str{"id", "foo"})
+	return zerr.WithFields(errors.New("get a user"), zerr.Str("id", "foo"))
 }
 ```
 

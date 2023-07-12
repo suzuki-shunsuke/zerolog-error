@@ -21,19 +21,19 @@ func TestWithFields(t *testing.T) {
 		{
 			name: "nil",
 			fields: []Field{
-				&Str{"id", "foo"},
+				Str("id", "foo"),
 			},
 		},
 		{
 			name: "normal",
 			err:  errors.New("get a user"),
 			fields: []Field{
-				&Str{"id", "foo"},
+				Str("id", "foo"),
 			},
 			exp: &zError{
 				err: errors.New("get a user"),
 				fields: []Field{
-					&Str{"id", "foo"},
+					Str("id", "foo"),
 				},
 			},
 		},
@@ -76,7 +76,7 @@ func TestWithError(t *testing.T) {
 			err: &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "FOO"},
+					Str("name", "FOO"),
 				},
 			},
 		},
@@ -110,12 +110,12 @@ func Test_toFields(t *testing.T) {
 		{
 			name: "zError",
 			exp: []Field{
-				&Str{"name", "FOO"},
+				Str("name", "FOO"),
 			},
 			err: fmt.Errorf("get a user: %w", &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "FOO"},
+					Str("name", "FOO"),
 				},
 			}),
 		},
@@ -139,25 +139,12 @@ func BenchmarkWithFields(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			arr1 := make([]Field, 10)
 			for i := 0; i < 10; i++ {
-				arr1[i] = &Str{
-					fmt.Sprintf("foo-%d", i),
-					fmt.Sprintf("foo-%d", i),
-				}
-			}
-			WithFields(err, arr1...) //nolint:errcheck
-		}
-	})
-	b.Run("str2", func(b *testing.B) {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
-			arr2 := make([]Field, 10)
-			for i := 0; i < 10; i++ {
-				arr2[i] = String(
+				arr1[i] = Str(
 					fmt.Sprintf("foo-%d", i),
 					fmt.Sprintf("foo-%d", i),
 				)
 			}
-			WithFields(err, arr2...) //nolint:errcheck
+			WithFields(err, arr1...) //nolint:errcheck
 		}
 	})
 }
@@ -170,42 +157,12 @@ func BenchmarkWithError(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			arr1 := make([]Field, 10)
 			for i := 0; i < 10; i++ {
-				arr1[i] = &Str{
-					fmt.Sprintf("foo-%d", i),
-					fmt.Sprintf("foo-%d", i),
-				}
-			}
-			WithError(ev, WithFields(err, arr1...))
-		}
-	})
-	b.Run("str2", func(b *testing.B) {
-		ev := log.Info()
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
-			arr2 := make([]Field, 10)
-			for i := 0; i < 10; i++ {
-				arr2[i] = String(
+				arr1[i] = Str(
 					fmt.Sprintf("foo-%d", i),
 					fmt.Sprintf("foo-%d", i),
 				)
 			}
-			WithError(ev, WithFields(err, arr2...))
+			WithError(ev, WithFields(err, arr1...))
 		}
 	})
-}
-
-type Str2 struct {
-	Key   string
-	Value string
-}
-
-func (field Str2) With(ev *zerolog.Event) *zerolog.Event {
-	return ev.Str(field.Key, field.Value)
-}
-
-func String(key, value string) Str2 {
-	return Str2{
-		Key:   key,
-		Value: value,
-	}
 }
