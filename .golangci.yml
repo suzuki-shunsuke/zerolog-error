@@ -32,3 +32,4 @@ linters:
     - exhaustruct
     - execinquery
     - dupword
+    - testableexamples
