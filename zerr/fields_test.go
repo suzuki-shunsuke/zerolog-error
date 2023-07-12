@@ -9,17 +9,17 @@ import (
 	"github.com/suzuki-shunsuke/zerolog-error/zerr"
 )
 
-func TestStr_With(t *testing.T) {
+func Test_str_With(t *testing.T) {
 	t.Parallel()
 	data := []struct {
 		name  string
-		field *zerr.Str
+		field zerr.Field
 		ev    *zerolog.Event
 		exp   *zerolog.Event
 	}{
 		{
 			name:  "normal",
-			field: &zerr.Str{"id", "foo"},
+			field: zerr.Str("id", "foo"),
 			ev:    log.Info(),
 			exp:   log.Info().Str("id", "foo"),
 		},

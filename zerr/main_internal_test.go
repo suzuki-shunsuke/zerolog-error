@@ -21,19 +21,19 @@ func TestWithFields(t *testing.T) {
 		{
 			name: "nil",
 			fields: []Field{
-				&Str{"id", "foo"},
+				Str("id", "foo"),
 			},
 		},
 		{
 			name: "normal",
 			err:  errors.New("get a user"),
 			fields: []Field{
-				&Str{"id", "foo"},
+				Str("id", "foo"),
 			},
 			exp: &zError{
 				err: errors.New("get a user"),
 				fields: []Field{
-					&Str{"id", "foo"},
+					Str("id", "foo"),
 				},
 			},
 		},
@@ -76,7 +76,7 @@ func TestWithError(t *testing.T) {
 			err: &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "FOO"},
+					Str("name", "FOO"),
 				},
 			},
 		},
@@ -110,12 +110,12 @@ func Test_toFields(t *testing.T) {
 		{
 			name: "zError",
 			exp: []Field{
-				&Str{"name", "FOO"},
+				Str("name", "FOO"),
 			},
 			err: fmt.Errorf("get a user: %w", &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "FOO"},
+					Str("name", "FOO"),
 				},
 			}),
 		},
@@ -130,4 +130,39 @@ func Test_toFields(t *testing.T) {
 			}
 		})
 	}
+}
+
+func BenchmarkWithFields(b *testing.B) {
+	err := errors.New("foo")
+	b.Run("normal", func(b *testing.B) {
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			arr1 := make([]Field, 10)
+			for i := 0; i < 10; i++ {
+				arr1[i] = Str(
+					fmt.Sprintf("foo-%d", i),
+					fmt.Sprintf("foo-%d", i),
+				)
+			}
+			WithFields(err, arr1...) //nolint:errcheck
+		}
+	})
+}
+
+func BenchmarkWithError(b *testing.B) {
+	err := errors.New("foo")
+	b.Run("normal", func(b *testing.B) {
+		ev := log.Info()
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			arr1 := make([]Field, 10)
+			for i := 0; i < 10; i++ {
+				arr1[i] = Str(
+					fmt.Sprintf("foo-%d", i),
+					fmt.Sprintf("foo-%d", i),
+				)
+			}
+			WithError(ev, WithFields(err, arr1...))
+		}
+	})
 }

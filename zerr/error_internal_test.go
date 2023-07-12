@@ -25,7 +25,7 @@ func Test_zError_Error(t *testing.T) {
 			err: &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "yoo"},
+					Str("name", "yoo"),
 				},
 			},
 			exp: "foo",
@@ -62,7 +62,7 @@ func Test_zError_Unwrap(t *testing.T) {
 			err: &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "yoo"},
+					Str("name", "yoo"),
 				},
 			},
 			exp: errors.New("foo"),
@@ -101,11 +101,11 @@ func Test_zError_Fields(t *testing.T) {
 			err: &zError{
 				err: errors.New("foo"),
 				fields: []Field{
-					&Str{"name", "yoo"},
+					Str("name", "yoo"),
 				},
 			},
 			exp: []Field{
-				&Str{"name", "yoo"},
+				Str("name", "yoo"),
 			},
 		},
 		{
@@ -114,16 +114,16 @@ func Test_zError_Fields(t *testing.T) {
 				err: &zError{
 					err: errors.New("foo"),
 					fields: []Field{
-						&Str{"age", "10"},
+						Str("age", "10"),
 					},
 				},
 				fields: []Field{
-					&Str{"name", "yoo"},
+					Str("name", "yoo"),
 				},
 			},
 			exp: []Field{
-				&Str{"age", "10"},
-				&Str{"name", "yoo"},
+				Str("age", "10"),
+				Str("name", "yoo"),
 			},
 		},
 	}

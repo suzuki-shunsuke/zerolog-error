@@ -19,5 +19,5 @@ func Example() {
 
 func updateUser() error {
 	// WithFields adds fields to error
-	return zerr.WithFields(errors.New("get a user"), &zerr.Str{"id", "foo"}, &zerr.Str{"name", "Foo"})
+	return zerr.WithFields(errors.New("get a user"), zerr.Str("id", "foo"), zerr.Str("name", "Foo"))
 }
